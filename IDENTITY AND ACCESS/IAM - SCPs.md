@@ -33,6 +33,7 @@ As SCPs herdadas da Root + OU + Conta são combinadas.
 
 Se uma OU bloquear algo, a conta abaixo também estará bloqueada.
 
+-----------------------------------------------
 # Conceito CRÍTICO para prova
 
 ## SCP afeta:
@@ -60,6 +61,7 @@ Bloqueia tudo e libera apenas alguns serviços.
 **Mais difícil de manter.**
 
 Exemplo:
+```
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -73,10 +75,12 @@ Exemplo:
     }
   ]
 }
+```
 
-### Exemplos MUITO cobrados na SAP-C02
+----------------------------------------------------------------
+# Exemplos MUITO cobrados na SAP-C02
 
-**Bloquear regiões AWS**
+### Bloquear regiões AWS
 Empresa quer permitir apenas:
 
 - us-east-1
@@ -108,9 +112,22 @@ Empresa quer permitir apenas:
 }
 ```
 
+**Por que usar** `NotAction`?
+
+Porque serviços globais:
+
+- IAM
+- Route53
+- Organizations
+
+não operam em região específica.
+
+Questão clássica da SAP.
+
 ### Impedir criação de recursos sem tags
 
 Muito comum em governança enterprise.
+
 ```
 {
   "Version": "2012-10-17",
@@ -131,3 +148,30 @@ Muito comum em governança enterprise.
   ]
 }
 ```
+
+------------------------------
+# Cenários típicos de prova
+
+## Cenário 1
+
+“Empresa quer impedir que desenvolvedores desativem CloudTrail em qualquer conta.”
+
+Resposta:
+
+- AWS Organizations + SCP.
+
+## Cenário 2
+
+“Empresa quer impedir criação de recursos fora de regiões aprovadas.”
+
+Resposta:
+
+- SCP com `aws:RequestedRegion`.
+
+## Cenário 3
+
+“Empresa quer garantir que administradores locais das contas não consigam escapar das restrições.”
+
+Resposta:
+
+- SCP explicit deny.
